@@ -1,0 +1,229 @@
+.admin-dashboard-container {
+  display: flex;
+  width: 100%;
+  margin-top: 4rem;
+}
+
+.admin-sidebar {
+  width: 230px;
+  min-height: 100vh;
+  background: #1e1e2f;
+  padding: 25px 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+}
+
+.dashboard-title {
+  font-size: 22px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Sidebar Buttons */
+.admin-sidebar button {
+  background: #2a2a40;
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.admin-sidebar button:hover {
+  background: #3c3c55;
+}
+
+/* Active Tab */
+.active-tab {
+  background: #007bff !important;
+  box-shadow: 0 0 10px rgba(0,123,255,0.5);
+}
+
+/* Go Home Button */
+.navigate-btn {
+  background: #ff9500 !important;
+  color: black !important;
+  font-weight: 600;
+}
+.navigate-btn:hover {
+  background: #ffaa12 !important;
+}
+
+.admin-right-content {
+  padding: 25px;
+  width: 100%;
+}
+
+
+
+.user-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* 3–4 cards per row */
+  gap: 20px;
+  padding: 10px;
+}
+
+/* Single user card */
+.user-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: 0.2s;
+}
+.user-card:hover {
+  transform: translateY(-5px);
+}
+
+
+
+.listing-card-container {
+  display: flex;
+  flex-direction: column;   /* Only 1 card per row */
+  gap: 25px;
+  width: 100%;
+}
+
+.listing-card {
+  width: 100%;              /* Full row */
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: 0.2s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-4px);
+}
+
+
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    width: 180px;
+    padding: 20px;
+  }
+
+  .dashboard-title {
+    font-size: 18px;
+  }
+
+  .admin-sidebar button {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}
+
+
+.dashboard-message {
+  text-align: center;
+  color: #555;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+
+.admin-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+
+.admin-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.admin-name {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.admin-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin: 5px 0;
+}
+
+
+.loading-text,
+.error-text,
+.no-data-text {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.2rem;
+}
+
+.loading-text {
+  color: #333;
+}
+
+.error-text {
+  color: red;
+}
+
+.no-data-text {
+  color: #777;
+}
+
+.delete-btn {
+  margin-top: 15px;
+  display: flex;
+  justify-content: start; /* center horizontally */
+}
+
+.delete-btn button {
+  background-color: #1c9095;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100px;
+  text-align: center;
+}
+
+.delete-btn button:hover {
+  background-color: #31b8bc;
+  transform: scale(1.05);
+}
+
+.navigate-btn{
+   background-color: #1c9095;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 120px;
+  text-align: center;
+}
+

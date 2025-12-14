@@ -1,0 +1,147 @@
+/* Main wrapper */
+.listing-wrapper {
+  padding: 25px;
+}
+
+/* Responsive grid layout */
+.listing-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Card container */
+.listing-card {
+  display: flex;
+  gap: 25px;
+  padding: 22px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: 0.2s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Left side (images) */
+.listing-left {
+  width: 32%;
+}
+
+.image-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.listing-img {
+  width: 150px;
+  height: 110px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Right side (content) */
+.listing-right {
+  width: 68%;
+}
+
+.listing-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.listing-desc {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* Details Grid */
+.details-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 20px;
+  margin-bottom: 12px;
+}
+
+.Listing-btn-delete{
+  margin-top: 15px;
+ 
+}
+
+
+.Listing-btn-delete button {
+  background-color: #1c9095;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100px;
+  text-align: center;
+}
+
+.Listing-btn-delete button:hover {
+  background-color: #31b8bc;
+  transform: scale(1.05);
+}
+
+/* Amenities tags */
+.amenities-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.tag {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  background: #e9f3ff;
+  color: #0077ff;
+}
+
+/* Owner box */
+.owner-box {
+  background: #f6f7f9;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 15px;
+  width: fit-content;
+  box-shadow: 0 0 6px #ddd;
+}
+
+.owner-box h4 {
+  margin-bottom: 6px;
+}
+
+/* ID */
+.listing-id {
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+  .listing-card {
+    flex-direction: column;
+  }
+
+  .listing-left, .listing-right {
+    width: 100%;
+  }
+
+  .listing-img {
+    width: 120px;
+    height: 90px;
+  }
+}

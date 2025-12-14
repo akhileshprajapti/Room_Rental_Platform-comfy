@@ -1,0 +1,418 @@
+/* MAIN PAGE */
+
+.details-page {
+  background: #f7f8fa;
+  min-height: 100vh;
+  padding-top: 100px;
+}
+
+/* Layout: Left content + Right booking box */
+.details-container {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: 40px;
+}
+
+.btn-container{
+  width: 20%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* GALLERY TOP — SMALL IMAGE SIZE */
+
+.details-image-slider {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+  grid-column: span 2;
+}
+
+/* 👇 SMALL thumbnails */
+.slider-img {
+  width: 140px;       /* small but clean */
+  height: 90px;       /* small compact look */
+  border-radius: 10px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.slider-img:hover {
+  transform: scale(1.06);
+}
+
+/* Scrollbar style */
+.details-image-slider::-webkit-scrollbar {
+  height: 8px;
+}
+.details-image-slider::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 6px;
+}
+
+/* FULL-SCREEN IMAGE VIEWER */
+
+.fullscreen-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  animation: fade 0.25s ease;
+  cursor: zoom-out;
+}
+
+.fullscreen-img {
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
+  border-radius: 12px;
+  animation: zoom 0.25s ease;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes zoom {
+  from { transform: scale(0.85); opacity: 0.7; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* =============================== */
+/* LEFT SIDE — LISTING INFO */
+/* =============================== */
+
+.listing-info h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-box {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.full-desc {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #555;
+}
+.owner{
+  margin-top: 10px;
+}
+
+/* Amenities */
+.amenities-section h3 {
+  margin-top: 25px;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.amenities-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.amenity-pill {
+  padding: 7px 14px;
+  background: #eef4ff;
+  border-radius: 20px;
+  color: #1d4ed8;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* =============================== */
+/* RIGHT SIDE — BOOKING BOX */
+/* =============================== */
+
+.booking-box {
+  height: fit-content;
+  padding: 22px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 120px;
+}
+
+.booking-box h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.per-month {
+  margin-top: 4px;
+  color: #666;
+  font-size: 1rem;
+}
+
+.book-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  color: #fff;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.book-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #005ed6, #00a7e6);
+}
+
+/* =============================== */
+/* RESPONSIVE */
+/* =============================== */
+
+@media (max-width: 960px) {
+  .details-container {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-box {
+    position: static;
+  }
+
+  .details-image-slider {
+    grid-column: span 1;
+  }
+}
+
+/* ==== EDIT MODAL (Glassmorphism) ==== */
+.edit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Modal Content */
+.edit-form-container {
+  width: 95%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 16px;
+  padding: 30px 28px;
+  animation: slideUp 0.3s ease;
+  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.25);
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modal Heading */
+.edit-form-container h2 {
+  font-size: 1.7rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 1.8rem;
+  color: #1a1a1a;
+}
+
+/* Labels */
+.edit-form-container label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+/* Inputs, Textareas */
+.edit-form-container input,
+.edit-form-container textarea,
+.edit-form-container select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d6d9df;
+  font-size: 1rem;
+  background: #f9fafb;
+  transition: 0.2s ease;
+}
+
+/* On Focus */
+.edit-form-container input:focus,
+.edit-form-container textarea:focus,
+.edit-form-container select:focus {
+  border-color: #0072ff;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 114, 255, 0.15);
+  outline: none;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+  border-radius: 12px;
+}
+
+/* Buttons */
+.edit-form-container .buttons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Save Button */
+.edit-form-container button.save-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  border: none;
+  padding: 12px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.edit-form-container button.save-btn:hover {
+  background: linear-gradient(135deg, #005ed6, #00a7e6);
+  transform: translateY(-2px);
+}
+
+/* Cancel Button */
+.edit-form-container button.cancel-btn {
+  flex: 1;
+  background: #f3f4f6;
+  border: 1px solid #d5d8dd;
+  padding: 12px;
+  font-size: 1.05rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.edit-form-container button.cancel-btn:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+}
+
+/* Checkboxes (Amenities) */
+.amenities-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.amenities-options label {
+  padding: 6px 10px;
+  background: #eef2ff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.amenities-options label:hover {
+  background: #dbe4ff;
+}
+
+/* ==== EDIT MODAL (Glassmorphism) ==== */
+.edit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* TOP alignment for scroll */
+  overflow-y: auto;       /* 🔥 allow scrolling */
+  padding: 40px 15px;     /* spacing for top/bottom */
+  animation: fadeIn 0.3s ease;
+}
+
+/* Modal Content (Scrollable Box) */
+.edit-form-container {
+  width: 95%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 16px;
+  padding: 30px 28px;
+  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease;
+
+  max-height: 90vh;      /* 🔥 IMPORTANT — limit height */
+  overflow-y: auto;      /* 🔥 form scrolls internally */
+}
+
+/* Scrollbar for form */
+.edit-form-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.edit-form-container::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+  border-radius: 10px;
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.error-text {
+  color: #d9534f;
+  font-weight: 600;
+  padding: 10px 0;
+}

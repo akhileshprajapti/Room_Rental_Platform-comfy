@@ -1,0 +1,174 @@
+/* MAIN SECTION */
+
+.section-box {
+  width: 100%;
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  padding-top: 80px;
+  height: 100vh;
+  overflow: hidden; /* 🔥 Prevent whole window scroll */
+}
+
+/* LAYOUT: FILTER + CARD WRAPPER */
+
+.card-container {
+  width: 90%;
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* FIXED LEFT FILTER PANEL */
+
+.filter {
+  width: 28%;
+  min-width: 260px;
+  max-width: 330px;
+  height: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  position: sticky; /* 🔥 FIXED on scroll */
+  top: 80px; /* adjust based on navbar height */
+  overflow-y: auto;
+}
+
+.filter-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1c9095;
+  margin-bottom: 15px;
+}
+
+/* Input Box */
+.input input {
+  padding: 0.8rem;
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid #d1d5db;
+  outline: none;
+  font-size: 1rem;
+}
+
+.input input:focus {
+  border-color: #1c9095;
+}
+
+/* Property Type, Gender */
+.filter-property {
+  margin-top: 1.8rem;
+  width: 100%;
+}
+
+.filter-property h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.btn-box {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.toggel-btn {
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggel-btn:hover {
+  background: #d1f4f6;
+  border-color: #1c9095;
+}
+
+/* Range Slider */
+.filter-range {
+  margin-top: 2rem;
+}
+
+.filter-range label {
+  width: 100%;
+  display: block;
+  text-align: left;
+  color: #374151;
+}
+
+.range-input {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Apply Button */
+.filter-btns {
+  margin-top: 20px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  background: #1c9095;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.filter-btns:hover {
+  background: #15757a;
+}
+
+/* RIGHT CARD AREA (SCROLLABLE) */
+
+.card {
+  width: 72%;
+  height: 100%;
+}
+
+.card-box {
+  height: 100%;
+  overflow-y: auto; /* 🔥 Only card list scrolls */
+  padding-right: 10px;
+  scroll-behavior: smooth; /* 🔥 Smooth scroll */
+}
+
+.card-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-box::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 900px) {
+  .card-container {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .filter {
+    position: static; /* Remove sticky on mobile */
+    width: 100%;
+    max-height: none;
+  }
+
+  .card {
+    width: 100%;
+    height: auto;
+  }
+
+  .card-box {
+    max-height: none;
+    overflow-y: visible;
+  }
+}

@@ -1,0 +1,145 @@
+
+.Nav-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4.5rem;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.Nav-box.scrolled {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.Nav-box.black-bg {
+  background: white !important;
+  box-shadow: none;
+  transition: transform 0.4s ease, background 0.3s ease;
+}
+
+/* hide/show animation for black navbar */
+.Nav-box.hide {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.Nav-box.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.Nav-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: #1c9095; /* default white (for hero section) */
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+/* Black text when scrolled (white bg) */
+.Nav-box.scrolled .logo {
+  color: #1c9095;
+}
+
+/* White text for black navbar */
+.Nav-box.black-bg .logo {
+  color: #1c9095;
+}
+
+.Nav-list .list {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.Nav-list .list a {
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
+}
+
+/* black text when navbar is scrolled (white background) */
+.Nav-box.scrolled .list a {
+  color: black;
+}
+
+/* white text for black navbar */
+.Nav-box.black-bg .list a {
+  color: black;
+}
+
+/* hover color */
+.Nav-list .list a:hover {
+  color: rgb(4, 4, 188);
+}
+
+.Log-btn{
+   padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 0.3rem;
+  border: 1px solid #1c9095;
+  /* background-color: #1c9095; */
+  /* color: white; */
+  color: #1c9095 !important;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.Sign-btn{
+   padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 0.3rem;
+  /* border: 1px solid #1c9095; */
+  background-color: #1c9095;
+  color: #1c9095;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.Sign-btn:hover {
+  background-color: #29babf;
+  color: white  ;
+}
+
+.Log-btn:hover {
+  background-color: rgb(228, 226, 226);
+  color: #1c9095 ;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.6rem;
+  }
+
+  .Nav-list .list {
+    gap: 1rem;
+  }
+
+  .Nav-list .list a {
+    font-size: 0.9rem;
+  }
+}
