@@ -9,7 +9,7 @@ const ListingRouter = require("./Router/Listing.route")
 const cors = require("cors")    
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://room-rental-platform-comfy-frontend.onrender.com",
     credentials: true
 }))
 
