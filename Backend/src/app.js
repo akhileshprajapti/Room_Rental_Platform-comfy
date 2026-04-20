@@ -12,7 +12,7 @@ const InvoiceRouter = require("./Router/Invoice.route")
 const cors = require("cors")    
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://room-rental-platform-comfy-frontend.onrender.com",
     credentials: true
 }))
 
@@ -29,8 +29,12 @@ app.use("/api/v1/user", authUserRouter )
 app.use("/api/v1/admin", AdminRouter)
 app.use("/api/v1/listing", ListingRouter)
 
+<<<<<<< HEAD
 app.use("/api/v1/booking", BookingRouter);
 app.use("/api/v1/contact", ContactRouter);
 app.use("/api/v1/invoice", InvoiceRouter);
 
 module.exports = app
+=======
+module.exports = app
+>>>>>>> 8d1e927e12a5955da5936a38d9e25ea12b128822
