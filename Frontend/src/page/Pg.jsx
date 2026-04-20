@@ -8,30 +8,81 @@ import { useNavigate } from "react-router-dom";
 import BACKEND_API from "../Config/api";
 
 export default function Pg() {
+
   const [listingData, setListingData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const [location, setLocation] = useState("");
+  const [roomType, setRoomType] = useState("");
+  const [gender, setGender] = useState("");
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        const res = await axios.get(
-          `${BACKEND_API}/api/v1/listing/showListing`
-        );
-        setListingData(res.data.data || res.data);
+  // 🔥 FETCH ALL (DEFAULT)
+  const fetchAllListings = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `${BACKEND_API}/api/v1/listing/showListing`
+      );
+      setListingData(res.data.data || res.data);
+    } catch (err) {
+      setError("Server Error: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      } catch (err) {
-        setError("Server Error: " + err.message);
-      } finally {
-        setLoading(false);
+  // 🔥 FILTER API
+  const fetchFiltered = async () => {
+    try {
+      setLoading(true);
+
+      const res = await axios.get(
+        `${BACKEND_API}/api/v1/listing/search?location=${location}&gender=${gender}&roomType=${roomType}`
+      );
+
+      setListingData(res.data.listings);
+
+    } catch (err) {
+      setError("Filter Error: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔥 AUTO FILTER (Debounce)
+  useEffect(() => {
+
+    const delay = setTimeout(() => {
+
+      if (!location && !roomType && !gender) {
+        fetchAllListings();
+      } else {
+        fetchFiltered();
       }
-    };
-    fetchListing();
+
+    }, 400); // debounce delay
+
+    return () => clearTimeout(delay);
+
+  }, [location, roomType, gender]);
+
+  // 🔥 INITIAL LOAD
+  useEffect(() => {
+    fetchAllListings();
   }, []);
 
   const handleNavigation = (id) => {
     navigate(`/pg/${id}`);
+  };
+
+  // 🔥 CLEAR FILTERS
+  const clearFilters = () => {
+    setLocation("");
+    setRoomType("");
+    setGender("");
   };
 
   return (
@@ -40,65 +91,100 @@ export default function Pg() {
         <Navbar />
 
         <div className="card-container">
-          {/* LEFT FILTER SECTION */}
+
+          {/* LEFT FILTER */}
           <div className="filter">
             <h1 className="filter-title">Filters</h1>
+
             <div className="filter-box">
+
+              {/* LOCATION */}
               <div className="input">
-                <input type="text" placeholder="Enter city name" />
+                <input
+                  type="text"
+                  placeholder="Enter city name"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
               </div>
 
+              {/* ROOM TYPE */}
               <div className="filter-property">
-                <h3>Property Type</h3>
+                <h3>Room Type</h3>
                 <div className="btn-box">
-                  <button className="toggel-btn">PG</button>
-                  <button className="toggel-btn">Flat</button>
+                  {["Single Room", "Double Room", "Full House"].map((type) => (
+                    <button
+                      key={type}
+                      onClick={() =>
+                        setRoomType(roomType === type ? "" : type)
+                      }
+                      className={`toggel-btn ${
+                        roomType === type ? "active" : ""
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
                 </div>
               </div>
 
+              {/* GENDER */}
               <div className="filter-property">
                 <h3>Gender</h3>
                 <div className="btn-box">
-                  <button className="toggel-btn">Male</button>
-                  <button className="toggel-btn">Female</button>
-                  <button className="toggel-btn">Co-Living</button>
+                  {["Boys", "Girls", "Co-Living"].map((g) => (
+                    <button
+                      key={g}
+                      onClick={() =>
+                        setGender(gender === g ? "" : g)
+                      }
+                      className={`toggel-btn ${
+                        gender === g ? "active" : ""
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="filter-range">
-                <label>Price Range: 0 - 50000</label>
-                <input className="range-input" type="range" />
+              {/* CLEAR BUTTON */}
+              <div className="filter-btn">
+                <button className="filter-btns" onClick={clearFilters}>
+                  Clear Filters
+                </button>
               </div>
 
-              <div className="filter-btn">
-                <button className="filter-btns">Apply Filter</button>
-              </div>
             </div>
           </div>
 
-          {/* RIGHT LISTING SECTION */}
+          {/* RIGHT LISTINGS */}
           <div className="card">
             <div className="card-box">
-              {loading && <p>Loading...</p>}
-              {error && <p>Error: {error}</p>}
-              {!loading && !error && listingData.length === 0 && (
-                <p>No data available</p>
-              )}
 
-              {/* Render Cards */}
+              {loading && <p>Loading...</p>}
+              {error && <p>{error}</p>}
+
+              {!loading && !error && listingData.length === 0 && (
+                <p>No data found</p>
+              )}
 
               {!loading &&
                 !error &&
                 listingData.map((listing) => (
-                  <div key={listing._id} onClick={() => handleNavigation(listing._id)}>
-                    <ListingCard  listing={listing} />
+                  <div
+                    key={listing._id}
+                    onClick={() => handleNavigation(listing._id)}
+                  >
+                    <ListingCard listing={listing} />
                   </div>
                 ))}
+
             </div>
           </div>
+
         </div>
       </section>
-      {/* <Footer /> */}
     </div>
   );
 }

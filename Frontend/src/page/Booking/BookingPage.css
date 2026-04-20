@@ -1,0 +1,160 @@
+/* Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box */
+.modal-box {
+  background: #fff;
+  width: 500px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Sections */
+.section {
+  margin-top: 20px;
+}
+
+.label {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Buttons */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-group button {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Active button */
+.btn-group button.active {
+  background: #2a8c8c;
+  color: #fff;
+  border: none;
+}
+
+/* Book now */
+.book-now {
+  margin-top: 10px;
+  padding: 10px;
+  width: 120px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f1f1f1;
+}
+
+/* Date section */
+.date-section {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.date-section input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+/* Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f1f1f1;
+}
+
+.confirm-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #2a8c8c;
+  color: #fff;
+}
+
+/* Existing styles... */
+
+/* Success Screen Styles */
+.success-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.success-icon {
+  font-size: 50px;
+  color: #2a8c8c;
+}
+
+.success-title {
+  margin-top: 10px;
+  color: #333;
+}
+
+.success-text {
+  color: #555;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Loading Message Styles */
+.loading-msg {
+  color: #2a8c8c;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+  animation: fadePulse 1.5s infinite;
+}
+
+/* Book Now Full Button Active State */
+.book-now.active-full {
+  background: #2a8c8c !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* Animations */
+@keyframes fadePulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}

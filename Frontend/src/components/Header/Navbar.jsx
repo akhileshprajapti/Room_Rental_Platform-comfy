@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import Account from "../Accounts/Accounts";
 import axios from "axios";
 import "./Navbar.css";
 
-
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true); /* 🟢 UPDATED */
-  const [lastScrollY, setLastScrollY] = useState(0); /* 🟢 UPDATED */
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [isLogin, setIsLogIn] = useState(false);
-  // const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  // ✅ NEW STATE (for same page account UI)
+  const [showAccountPage, setShowAccountPage] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  const blackRoutes = ["/Pg","/AdminDashboard" ]; /* 🟢 UPDATED */
+  const blackRoutes = ["/Pg", "/AdminDashboard"];
 
+  // Scroll Effect
   useEffect(() => {
     if (blackRoutes.includes(location.pathname)) {
       setIsScrolled(false);
-      // 🟢 handle scroll hide/show for /Pg page
+
       const handleScroll = () => {
         if (window.scrollY > lastScrollY) {
-          // scrolling down
           setIsVisible(false);
         } else {
-          // scrolling up
           setIsVisible(true);
         }
         setLastScrollY(window.scrollY);
@@ -35,7 +38,6 @@ export default function Navbar() {
       return () => window.removeEventListener("scroll", handleScroll);
     }
 
-    // 🟢 Default scroll behavior for other pages
     const handleScroll = () => {
       if (window.scrollY > 50) setIsScrolled(true);
       else setIsScrolled(false);
@@ -46,6 +48,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [location.pathname, lastScrollY]);
 
+  // Login Status
   useEffect(() => {
     const LoginStatus = async () => {
       try {
@@ -61,12 +64,12 @@ export default function Navbar() {
       } catch (err) {
         console.error("Error checking login status:", err);
         setIsLogIn(false);
-        // setUserRole("");
-      } 
+      }
     };
     LoginStatus();
   }, []);
 
+  // Logout
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -75,7 +78,8 @@ export default function Navbar() {
         { withCredentials: true }
       );
       setIsLogIn(false);
-      // setUserRole("");
+      setShowDropdown(false);
+      setShowAccountPage(false); // ✅ hide account page
       navigate("/");
     } catch (err) {
       console.error("Error logging out:", err);
@@ -84,42 +88,46 @@ export default function Navbar() {
 
   const handleAdminDashboard = () => {
     navigate("/AdminDashboard");
-  }  
+  };
 
   return (
     <div>
+      {/* ✅ NAVBAR */}
       <nav
-  className={`Nav-box ${
-    location.pathname === "/Pg" ||
-    location.pathname.startsWith("/pg/") ||
-    location.pathname === "/AdminDashboard" , "/Contact"
-      ? `black-bg ${isVisible ? "show" : "hide"}`
-      : isScrolled
-      ? "scrolled"
-      : ""
-    
-  }`}
->
-
+        className={`Nav-box ${
+          location.pathname === "/Pg" ||
+          location.pathname.startsWith("/pg/") ||
+          location.pathname === "/AdminDashboard"
+            ? `black-bg ${isVisible ? "show" : "hide"}`
+            : isScrolled
+            ? "scrolled"
+            : ""
+        }`}
+      >
         <div className="Nav-container">
           <div className="logo-container">
-            <Link to={'/'} className="logo">Comfy</Link>
+            <Link
+              to="/"
+              className="logo"
+              onClick={() => setShowAccountPage(false)} // reset
+            >
+              Comfy
+            </Link>
           </div>
 
           <div className="Nav-list">
             <div className="list">
               <a href="/AddYourProperty">Add Your Property</a>
               <a href="/Pg">PG</a>
-              {/* <a href="#">About</a> */}
               <a href="/contact">Contact</a>
-              {
-                
-              }
+
               {isLogin && userRole === "admin" && (
                 <button className="Log-btn" onClick={handleAdminDashboard}>
                   Admin Dashboard
                 </button>
               )}
+
+              {/* LOGIN / PROFILE */}
               {!isLogin ? (
                 <>
                   <Link to="/LogIn" className="Log-btn">
@@ -130,12 +138,51 @@ export default function Navbar() {
                   </Link>
                 </>
               ) : (
-                <button onClick={handleLogout} className="Log-btn">Logout</button>
+                <div className="profile-menu">
+                  <div
+                    className="profile-icon"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    👤 ▾
+                  </div>
+
+                  {showDropdown && (
+                    <div className="dropdown">
+                      {/* ✅ SAME PAGE ACCOUNT */}
+                      <p
+                        onClick={() => {
+                          setShowAccountPage(true);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        Account
+                      </p>
+
+                      <p onClick={handleLogout} className="logout">
+                        Logout
+                      </p>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
         </div>
       </nav>
+
+      {/* ✅ SAME PAGE ACCOUNT RENDER */}
+      {showAccountPage && (
+        <div className="account-wrapper">
+          <button
+            className="close-account"
+            onClick={() => setShowAccountPage(false)}
+          >
+            ❌ Close
+          </button>
+
+          <Account />
+        </div>
+      )}
     </div>
   );
 }

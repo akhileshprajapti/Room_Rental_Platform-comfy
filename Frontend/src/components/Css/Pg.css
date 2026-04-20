@@ -172,3 +172,22 @@
     overflow-y: visible;
   }
 }
+
+.toggel-btn {
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.toggel-btn:hover {
+  background: #f0f0f0;
+}
+
+/* ACTIVE */
+.toggel-btn.active {
+  background: black;
+  color: white;
+  border: none;
+}

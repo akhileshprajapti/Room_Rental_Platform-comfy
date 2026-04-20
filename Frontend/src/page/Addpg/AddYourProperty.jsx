@@ -38,7 +38,7 @@ export default function AddProperty() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Revoke object URLs on unmount or when previews change
   useEffect(() => {
@@ -71,21 +71,16 @@ export default function AddProperty() {
   // API call separated into its own function
   const createListing = async (data) => {
     const fd = buildFormData(data);
-    try{
-
-      const res = await axios.post(
-        `${BACKEND_API}/api/v1/listing/create`,
-        fd,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-          timeout: 30000,
-        }
-      );
+    try {
+      const res = await axios.post(`${BACKEND_API}/api/v1/listing/create`, fd, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000,
+      });
       setSuccessMessage(res?.data?.message || "PG Add Successfully");
-      navigate("/Pg")
-    }catch(err){
-      setErrorMessage("api error" ,err?.response?.data?.message);
+      navigate("/Pg");
+    } catch (err) {
+      setErrorMessage("api error", err?.response?.data?.message);
     }
   };
 
@@ -135,7 +130,7 @@ export default function AddProperty() {
   const handleDrop = (e) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files || []).filter((f) =>
-      f.type.startsWith("image/")
+      f.type.startsWith("image/"),
     );
     if (files.length === 0) return;
     setFormData((prev) => ({ ...prev, images: [...prev.images, ...files] }));
@@ -244,22 +239,29 @@ export default function AddProperty() {
         {/* Contact Info */}
         <div className="inputBox">
           <label>Phone Number</label>
-          <input 
-            type="Number"
+          <input
+            type="text"
             name="phoneNumber"
             value={formData.phoneNumber}
-            onChange={handleChange}
-            placeholder="Enter the number"
+            maxLength="10" //  limit to 10 digits
+            onChange={(e) => {
+              const value = e.target.value;
+
+              // allow only digits
+              if (/^\d*$/.test(value)) {
+                setFormData((prev) => ({
+                  ...prev,
+                  phoneNumber: value,
+                }));
+              }
+            }}
+            placeholder="Enter 10 digit number"
           />
         </div>
 
         <div className="inputBox">
           <label>Gender</label>
-          <select 
-            name="gender" 
-            value={formData.gender}
-            onChange={handleChange}
-          >
+          <select name="gender" value={formData.gender} onChange={handleChange}>
             <option value="Select">Select</option>
             <option value="Boys">Boys</option>
             <option value="Girls">Girls</option>
@@ -310,7 +312,7 @@ export default function AddProperty() {
                   />
                   {item}
                 </label>
-              )
+              ),
             )}
           </div>
         </div>
@@ -369,7 +371,12 @@ export default function AddProperty() {
         >
           <p>Drag & Drop Images Here</p>
           <span>OR</span>
-          <input type="file" multiple accept="image/*" onChange={handleFileSelect} />
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleFileSelect}
+          />
         </div>
 
         {/* Image Preview */}

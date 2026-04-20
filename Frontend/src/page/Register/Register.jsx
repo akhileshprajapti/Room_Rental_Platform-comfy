@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import "./Register.css";
-import axios from "axios";
+// import axios from "axios";
 import BACKEND_API from "../../Config/api";
 
 const Register = ({ onClose }) => {

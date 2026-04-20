@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BACKEND_API from "../../Config/api";
+import ForgotPassword from "../ForgetPassword/ForgetPassword";
+import ResetPassword from "../ForgetPassword/ResetPassword";
 
 const Login = () => {
   const [method, setMethod] = useState("password"); // 'password' or 'otp'
   const [showPassword, setShowPassword] = useState(false);
+  // const [showForget, setForget] = useState(false);
+  const [view, setView] = useState("login")
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -17,48 +22,42 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handelPasswordLogin = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setMessage("");
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-  try {
-    const res = await axios.post(
-      `${BACKEND_API}/api/v1/user/login`,
-      { email, password },
-      { withCredentials: true }
-    );
+    try {
+      const res = await axios.post(
+        `${BACKEND_API}/api/v1/user/login`,
+        { email, password },
+        { withCredentials: true },
+      );
 
       // Navigate based on role
       if (res?.data?.role === "admin") {
-        const successMsg = res?.data?.message || "Login Successful as admin"
-        setMessage(successMsg)
-        setTimeout(() =>{
+        const successMsg = res?.data?.message || "Login Successful as admin";
+        setMessage(successMsg);
+        setTimeout(() => {
           navigate("/AdminDashboard");
-        }, 1500)
+        }, 1500);
       } else {
-        const successMsg = res?.data?.message || "Login Successful as User"
-        setMessage(successMsg)
-        setTimeout(() =>{
+        const successMsg = res?.data?.message || "Login Successful as User";
+        setMessage(successMsg);
+        setTimeout(() => {
           navigate("/");
-
-        },1500)
+        }, 1500);
       }
+    } catch (error) {
+      console.log("login error", error);
 
-   
+      // backend error
+      setMessage(error.response?.data?.message || "Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  } catch (error) {
-    console.log("login error", error);
-
-    // backend error
-    setMessage(error.response?.data?.message || "Invalid credentials");
-
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-const handelOtp = async () => {
+  const handelOtp = async () => {
     if (!email) {
       return setMessage("First provide the Email");
     }
@@ -66,10 +65,9 @@ const handelOtp = async () => {
     setMessage("");
 
     try {
-      const res = await axios.post(
-        `${BACKEND_API}/api/v1/user/sendOtp`,
-        { email }
-      );
+      const res = await axios.post(`${BACKEND_API}/api/v1/user/sendOtp`, {
+        email,
+      });
       setMessage(res?.data?.message || "otp send to email");
       setOtpSent(true);
     } catch (error) {
@@ -78,48 +76,45 @@ const handelOtp = async () => {
     } finally {
       setLoading(false);
     }
-};
+  };
 
-const handelOtpLogin = async (e) => {
-  e.preventDefault();
+  const handelOtpLogin = async (e) => {
+    e.preventDefault();
 
-  if (!otp) {
-    return setMessage("Please enter OTP");
-  }
-
-  setLoading(true);
-  setMessage("");
-
-  try {
-    const res = await axios.post(
-      `${BACKEND_API}/api/v1/user/verifyOtp`,
-      { email, otp },
-      { withCredentials: true }
-    );
-
-    // Navigate ONLY if success
-    if (res?.data?.user?.role === "admin") {
-      setMessage(res?.data?.message || "OTP login successful as admin");
-      setTimeout(() =>{
-        navigate("/AdminDashboard");
-
-      }, 1500)
-    } else {
-      const successMsg = res?.data?.message || "Invalid OTP"
-      setMessage(successMsg);
-      setTimeout(() =>{
-        navigate("/")
-      }, 1500)
+    if (!otp) {
+      return setMessage("Please enter OTP");
     }
 
-  } catch (error) {
-    console.log("otp login error", error);
-    setMessage(error.response?.data?.message || "Invalid OTP");
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    setMessage("");
 
+    try {
+      const res = await axios.post(
+        `${BACKEND_API}/api/v1/user/verifyOtp`,
+        { email, otp },
+        { withCredentials: true },
+      );
+
+      // Navigate ONLY if success
+      if (res?.data?.user?.role === "admin") {
+        setMessage(res?.data?.message || "OTP login successful as admin");
+        setTimeout(() => {
+          navigate("/AdminDashboard");
+        }, 1500);
+      } else {
+        const successMsg = res?.data?.message || "Invalid OTP";
+        setMessage(successMsg);
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      }
+    } catch (error) {
+      console.log("otp login error", error);
+      setMessage(error.response?.data?.message || "Invalid OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="login-container">
@@ -138,6 +133,8 @@ const handelOtpLogin = async (e) => {
 
         {/* Right Side */}
         <div className="login-right">
+          {view === "login" &&(
+            <>
           <h2 className="title">Login to your Account</h2>
           <p className="subtitle">Welcome back! Select method to log in:</p>
 
@@ -220,11 +217,27 @@ const handelOtpLogin = async (e) => {
                 ? "Log In with Password"
                 : "Log In with OTP"}
             </button>
-
+             <p>
+                  <span
+                    style={{ cursor: "pointer", color: "blue" }}
+                    onClick={() => setView("forget")}
+                  >
+                    Forgot Password?
+                  </span>
+                </p>
             <p className="footer-text">
               Don't have an account? <a href="/SignIn">Create an account</a>
             </p>
           </form>
+          </>
+          )}
+          
+          {view === "forget" &&(
+            <ForgotPassword onOtpSent={() => setView("reset")} onBack={() => setView("login")} />
+          )}
+          {view === "reset" && (
+            <ResetPassword onResetSuccess={() => setView("login")}/>
+          )}
         </div>
       </div>
     </div>
