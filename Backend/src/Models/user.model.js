@@ -1,3 +1,4 @@
+const { string } = require("joi");
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
@@ -12,9 +13,16 @@ const userSchema = new Schema({
         unique:true
     },
     phone:{
-        type : Number,
+        type: String,
+        required: true,
+        validate: {
+            validator: function (v) {
+            return /^[0-9]{10}$/.test(v)
+    },
+        message: "Phone number must be exactly 10 digits",
 
     },
+},
     password:{
         type: String,
         required: true,
@@ -31,7 +39,13 @@ const userSchema = new Schema({
         type: String,
         enum: ["user", "admin"],
         default: "user"
-    }
+    },
+     resetOtp: {
+        type: String
+    },
+    resetOtpExpiry: {
+        type: Date
+    },
 },
   {
     timestamps: true

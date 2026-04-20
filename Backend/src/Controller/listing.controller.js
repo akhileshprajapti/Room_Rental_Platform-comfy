@@ -37,6 +37,7 @@ module.exports.createListing = async (req, res) => {
 
       //  FIXED: remove uploadedImage, store array
       image: uploadedImages,
+      locationCoords: req.body.locationCoords,
     });
 
     res.status(201).json({
@@ -58,6 +59,41 @@ module.exports.getAllListings = async (req, res) => {
     res.status(200).json(listings);
   } catch (error) {
     console.error("Get All Listings Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// SEARCH LISTINGS WITH FILTER
+module.exports.searchListing = async (req, res) => {
+  try {
+    const { location, gender, roomType } = req.query;
+
+    let filter = {};
+
+    // location search (case insensitive)
+    if (location) {
+      filter.location = { $regex: location, $options: "i" };
+    }
+
+    // gender filter
+    if (gender) {
+      filter.gender = gender;
+    }
+
+    // room type filter
+    if (roomType) {
+      filter.roomType = roomType;
+    }
+
+    const listings = await Listing.find(filter).populate("owner");
+
+    res.status(200).json({
+      total: listings.length,
+      listings
+    });
+
+  } catch (error) {
+    console.error("Search Listing Error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -93,6 +129,7 @@ module.exports.updateListing = async (req, res) => {
       roomType: req.body.roomType,
       phoneNumber: req.body.phoneNumber,
       gender: req.body.gender,
+      locationCoords: req.body.locationCoords,
 
     };
 

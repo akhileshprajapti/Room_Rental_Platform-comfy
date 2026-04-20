@@ -9,5 +9,6 @@ Router.post('/register', AuthUserController.RegisterUser);
 Router.post('/login', AuthUserController.LoginUser);
 Router.get('/loginStatus', AuthUserController.LoginStatus);
 Router.post('/logout', AuthUserController.LogOutUser);
-
+Router.post('/forgetPassword',AuthUserController.ForgetPassword)
+Router.post("/resetPassword", AuthUserController.ResetPassword)
 module.exports = Router;

@@ -12,6 +12,7 @@ router.post("/create", isAuthenticated, upload, listingController.createListing)
 
 // Get all listings (public)
 router.get("/showListing", listingController.getAllListings);
+router.get("/search", listingController.searchListing);
 
 // Get single (public)
 router.get("/:id", listingController.getListing);
@@ -21,5 +22,6 @@ router.put("/:id", isAuthenticated, isOwner, upload, listingController.updateLis
 
 // Delete (must be owner)
 router.delete("/:id", isAuthenticated, isOwner, listingController.deleteListing);
+
 
 module.exports = router;

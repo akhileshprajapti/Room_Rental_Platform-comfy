@@ -23,7 +23,7 @@ module.exports.isAuthenticated = async (req, res, next) => {
   }
 };
 
-const Listing = require("../models/listing.model");
+const Listing = require("../Models/listing.model");
 
 module.exports.isOwner = async (req, res, next) => {
   try {

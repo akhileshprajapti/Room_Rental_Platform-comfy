@@ -6,6 +6,9 @@ const cookieParser = require("cookie-parser")
 const authUserRouter = require("./Router/AuthUser.route")
 const AdminRouter = require("./Router/Admin.route")
 const ListingRouter = require("./Router/Listing.route")
+const BookingRouter = require("./Router/Booking.route");
+const ContactRouter = require("./Router/contact.route")
+const InvoiceRouter = require("./Router/Invoice.route")
 const cors = require("cors")    
 
 app.use(cors({
@@ -25,5 +28,9 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", authUserRouter )
 app.use("/api/v1/admin", AdminRouter)
 app.use("/api/v1/listing", ListingRouter)
+
+app.use("/api/v1/booking", BookingRouter);
+app.use("/api/v1/contact", ContactRouter);
+app.use("/api/v1/invoice", InvoiceRouter);
 
 module.exports = app

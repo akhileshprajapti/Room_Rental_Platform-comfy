@@ -1,7 +1,9 @@
 const User = require("../Models/user.model.js");
+const Listing = require("../Models/listing.model.js")
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 module.exports.RegisterUser = async (req, res) => {
   const { name, email, phone, password, conformpassword } = req.body;
@@ -215,6 +217,84 @@ module.exports.LogOutUser = async (req, res) =>{
   }
 }
 
+module.exports.ForgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 🔹 Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.resetOtp = otp;
+    user.resetOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save();
+
+    // 🔹 Send email (demo using console)
+    console.log("Password Reset OTP:", otp);
+
+    // (Optional real email using nodemailer)
+   
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset OTP",
+      text: `Your password reset OTP is ${otp}. It is valid for 10 minutes.`,
+    });
+    
+
+    res.json({ message: "OTP sent to your email" });
+
+  } catch (error) {
+    console.error("ForgetPassword error", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+module.exports.ResetPassword = async (req, res) => {
+  try {
+    const { otp, password } = req.body;
+
+    const user = await User.findOne({
+      resetOtp: otp.toString(),
+      resetOtpExpiry: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid or expired OTP",
+      });
+    }
+
+    // 🔹 Hash new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.resetOtp = undefined;
+    user.resetOtpExpiry = undefined;
+
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+
+  } catch (error) {
+    console.error("ResetPassword error", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports.LoginStatus = async (req, res) =>{
   const token = req.cookies.token;
   if(!token){
@@ -245,3 +325,6 @@ module.exports.LoginStatus = async (req, res) =>{
   }
 
 }
+
+
+
