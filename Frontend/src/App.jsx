@@ -1,7 +1,7 @@
 
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-// import Navbar from './components/Header/Navbar'
+import Navbar from './components/Header/Navbar'
 import AllRouter from './Router/Router'
 import Pg from './page/Pg'
 import LogIn from './page/Register/Login.jsx'
@@ -14,7 +14,7 @@ import ForgotPassword from './page/ForgetPassword/ForgetPassword.jsx'
 import ResetPassword from './page/ForgetPassword/ResetPassword.jsx'
 import BookingPages from "./page/Booking/BookingPage.jsx"
 import PaymentSuccess from './page/paymentSuccess/payment.jsx'
-import AccountRouter from './Router/AccountRouter.jsx'
+import Account from './page/Account/Account.jsx'
 
 
 function App() {
@@ -23,6 +23,7 @@ function App() {
   return (
     <>
      <Router>
+      <Navbar/>
       <Routes>
         
         <Route path='/' element={<AllRouter/>} />
@@ -37,7 +38,7 @@ function App() {
         <Route path='/resetPassword' element= {<ResetPassword/>}/>
         <Route path='/bookinPage' element={<BookingPages/>}/>
         <Route path='/payment-success' element={<PaymentSuccess/>}/>
-        <Route path='/Account' element ={<AccountRouter/>}/>
+        <Route path='/Account' element={<Account/>}/>
       </Routes>
      </Router>
     </>

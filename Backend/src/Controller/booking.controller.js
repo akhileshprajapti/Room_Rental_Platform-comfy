@@ -141,3 +141,30 @@ module.exports.createBooking = async (req, res) => {
     });
   }
 };
+
+module.exports.getUserBookings = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Verify user is requesting their own bookings
+    if (req.user._id.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
+
+    const bookings = await Booking.find({ user: userId })
+      .populate('listing', 'title location price')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      bookings,
+      count: bookings.length
+    });
+  } catch (error) {
+    console.error("GetUserBookings Error:", error);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+};

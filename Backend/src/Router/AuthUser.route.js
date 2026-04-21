@@ -2,6 +2,7 @@ const express = require("express");
 const Router = express.Router();
 const AuthUserController = require("../Controller/AuthUser.controller");
 const verifyAdminMiddleware = require("../Middleware/verifyAdmin.middleware");
+const { isAuthenticated } = require("../Middleware/AuthUser.middleware");
 
 Router.post('/sendOtp', AuthUserController.SendOtp);
 Router.post('/verifyOtp', AuthUserController.VerifyOtp);
@@ -11,4 +12,6 @@ Router.get('/loginStatus', AuthUserController.LoginStatus);
 Router.post('/logout', AuthUserController.LogOutUser);
 Router.post('/forgetPassword',AuthUserController.ForgetPassword)
 Router.post("/resetPassword", AuthUserController.ResetPassword)
+Router.put('/updateProfile', isAuthenticated, AuthUserController.UpdateProfile);
+
 module.exports = Router;

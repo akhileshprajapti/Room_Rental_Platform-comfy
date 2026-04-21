@@ -318,13 +318,57 @@ module.exports.LoginStatus = async (req, res) =>{
             login: true,
             role: role,
             message: "User is logged in",
-            user :{ id: decoded.id, email: userData.email }
+            user: userData
         })
   }catch(error){
     res.status(500).json({login:false,message: "Internal Server Error"});
   }
 
 }
+
+module.exports.UpdateProfile = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    
+    if (!token) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    
+    const { name, phone } = req.body;
+
+    // Validation
+    if (!name || !phone) {
+      return res.status(400).json({ message: "Name and phone are required" });
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ message: "Phone number must be exactly 10 digits" });
+    }
+
+    // Update user
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, phone },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user
+    });
+  } catch (error) {
+    console.error("UpdateProfile error", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
 

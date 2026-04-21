@@ -5,7 +5,7 @@ const { isAuthenticated } = require("../Middleware/AuthUser.middleware");
 const paymentController = require('../Controller/payment.controller');
 
 router.post("/create", isAuthenticated, bookingController.createBooking);
-
+router.get("/userBookings/:userId", isAuthenticated, bookingController.getUserBookings);
 
 // Stripe requires the raw body to verify the webhook signature
 router.post(

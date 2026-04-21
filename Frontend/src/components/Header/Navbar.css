@@ -1,185 +1,192 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 
+/* NAVBAR */
 .Nav-box {
   position: fixed;
+  top: 24.5px;
+  left: 24.5px;
+  width: 96.7%;
+  height: 4rem;
+  border-radius: 12px 12px 0 0;
+
+  display: flex;
+  align-items: center;
+
+  z-index: 1000;
+
+  background: rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  transition: all 0.3s ease;
+}
+
+/* STATIC (NON HOME) */
+.Nav-box.static {
   top: 0;
   left: 0;
   width: 100%;
-  height: 4.5rem;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  z-index: 1000;
-  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  border-radius: 0;
 }
 
+/* SCROLLED */
 .Nav-box.scrolled {
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 0;
+
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(30px);
 }
 
-.Nav-box.black-bg {
-  background: white !important;
-  box-shadow: none;
-  transition: transform 0.4s ease, background 0.3s ease;
-}
-
-/* hide/show animation for black navbar */
+/* SHOW/HIDE */
 .Nav-box.hide {
   transform: translateY(-100%);
-  opacity: 0;
 }
-
 .Nav-box.show {
   transform: translateY(0);
-  opacity: 1;
 }
 
+/* CONTAINER */
 .Nav-container {
-  height: 100%;
   width: 100%;
+  padding: 0 2.5rem;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
-  box-sizing: border-box;
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
+/* LOGO */
 .logo {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #fff;
   text-decoration: none;
-  color: #1c9095; /* default white (for hero section) */
-  letter-spacing: 1px;
-  transition: color 0.3s ease;
+  font-family: serif;
+  font-style: italic;
 }
 
-/* Black text when scrolled (white bg) */
-.Nav-box.scrolled .logo {
-  color: #1c9095;
-}
-
-/* White text for black navbar */
-.Nav-box.black-bg .logo {
-  color: #1c9095;
-}
-
-.Nav-list .list {
+/* LINKS */
+.list {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.8rem;
 }
 
-.Nav-list .list a {
-  font-size: 1rem;
-  font-weight: 600;
+.list a {
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
-  color: white;
-  text-transform: capitalize;
-  transition: color 0.3s ease;
+  font-size: 0.95rem;
 }
 
-/* black text when navbar is scrolled (white background) */
-.Nav-box.scrolled .list a {
-  color: black;
+.list a:hover {
+  color: #fff;
 }
 
-/* white text for black navbar */
-.Nav-box.black-bg .list a {
-  color: black;
-}
+/* BUTTONS */
+.Log-btn,
+.Sign-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 
-/* hover color */
-.Nav-list .list a:hover {
-  color: rgb(4, 4, 188);
-}
+  padding: 8px 14px;
+  border-radius: 1rem;
+  font-size: 0.9rem;
 
-.Log-btn{
-   padding: 0.7rem 1.5rem;
-  font-size: 1.1rem;
-  border-radius: 0.3rem;
-  border: 1px solid #1c9095;
-  /* background-color: #1c9095; */
-  /* color: white; */
-  color: #1c9095 !important;
-  cursor: pointer;
   transition: 0.3s;
 }
 
-.Sign-btn{
-   padding: 0.7rem 1.5rem;
-  font-size: 1.1rem;
-  border-radius: 0.3rem;
-  /* border: 1px solid #1c9095; */
-  background-color: #1c9095;
-  color: #1c9095;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.Sign-btn:hover {
-  background-color: #29babf;
-  color: white  ;
+/* LOGIN */
+.Log-btn {
+  /* border: 1px solid rgba(255, 255, 255, 0.25); */
+  color: #fff;
 }
 
 .Log-btn:hover {
-  background-color: rgb(228, 226, 226);
-  color: #1c9095 ;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-@media (max-width: 768px) {
-  .logo {
-    font-size: 1.6rem;
-  }
-
-  .Nav-list .list {
-    gap: 1rem;
-  }
-
-  .Nav-list .list a {
-    font-size: 0.9rem;
-  }
+/* SIGNUP */
+.Sign-btn {
+  background: #acacac71;
+  color: #000;
 }
-/* ✅ PROFILE DROPDOWN */
-.profile-menu {
-  position: relative;
+
+.Sign-btn:hover {
+  opacity: 0.85;
+}
+
+/* ARROW ANIMATION */
+.btn-arrow .arrow {
+  transition: transform 0.3s;
+}
+
+.btn-arrow:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* PROFILE */
+.profile-icon {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 8px 10px;
+  border-radius: 2rem;
+
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
   cursor: pointer;
 }
 
-.profile-icon {
-  font-size: 1.2rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  background: white;
-}
-
+/* DROPDOWN */
 .dropdown {
   position: absolute;
-  top: 120%;
+  top: 100%;
   right: 0;
-  background: white;
-  width: 160px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 0.5rem 0;
-  z-index: 1000;
+
+  width: 170px;
+
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(30px);
+
+  border-radius: 0 0 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  padding: 8px 0;
 }
 
+/* DROPDOWN ITEMS */
 .dropdown p {
   padding: 10px 15px;
-  margin: 0;
+  color: #fff;
   cursor: pointer;
-  font-weight: 500;
 }
 
 .dropdown p:hover {
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.dropdown .logout {
-  color: red;
+.logout {
+  color: #ff6b6b;
+}
+
+/* ACCOUNT WRAPPER */
+.account-wrapper {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
+}
+
+/* CLOSE */
+.close-account {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

@@ -3,6 +3,7 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import Account from "../Accounts/Accounts";
 import axios from "axios";
 import "./Navbar.css";
+import { User, ChevronDown, ArrowRight } from "lucide-react";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -12,77 +13,69 @@ export default function Navbar() {
   const [userRole, setUserRole] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // ✅ NEW STATE (for same page account UI)
-  const [showAccountPage, setShowAccountPage] = useState(false);
-
   const location = useLocation();
   const navigate = useNavigate();
 
-  const blackRoutes = ["/Pg", "/AdminDashboard"];
+  const isHome = location.pathname === "/";
 
-  // Scroll Effect
+  /* ✅ SCROLL ONLY ON HOME (NO DESIGN CHANGE) */
   useEffect(() => {
-    if (blackRoutes.includes(location.pathname)) {
+    if (!isHome) {
       setIsScrolled(false);
-
-      const handleScroll = () => {
-        if (window.scrollY > lastScrollY) {
-          setIsVisible(false);
-        } else {
-          setIsVisible(true);
-        }
-        setLastScrollY(window.scrollY);
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
+      setIsVisible(true);
+      return;
     }
 
     const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
       if (window.scrollY > 50) setIsScrolled(true);
       else setIsScrolled(false);
+
+      setLastScrollY(window.scrollY);
     };
 
-    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname, lastScrollY]);
+  }, [location.pathname, lastScrollY, isHome]);
 
-  // Login Status
+  /* LOGIN STATUS */
   useEffect(() => {
     const LoginStatus = async () => {
       try {
         const res = await axios.get(
           "http://localhost:8080/api/v1/user/loginStatus",
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         if (res.status === 200 && res?.data?.login === true) {
           setIsLogIn(true);
           setUserRole(res?.data?.role || "user");
         }
-      } catch (err) {
-        console.error("Error checking login status:", err);
+      } catch {
         setIsLogIn(false);
       }
     };
     LoginStatus();
   }, []);
 
-  // Logout
+  /* LOGOUT */
   const handleLogout = async () => {
     try {
       await axios.post(
         "http://localhost:8080/api/v1/user/logout",
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setIsLogIn(false);
       setShowDropdown(false);
-      setShowAccountPage(false); // ✅ hide account page
       navigate("/");
     } catch (err) {
-      console.error("Error logging out:", err);
+      console.error(err);
     }
   };
 
@@ -92,16 +85,11 @@ export default function Navbar() {
 
   return (
     <div>
-      {/* ✅ NAVBAR */}
       <nav
         className={`Nav-box ${
-          location.pathname === "/Pg" ||
-          location.pathname.startsWith("/pg/") ||
-          location.pathname === "/AdminDashboard"
-            ? `black-bg ${isVisible ? "show" : "hide"}`
-            : isScrolled
-            ? "scrolled"
-            : ""
+          isHome
+            ? `${isScrolled ? "scrolled" : ""} ${isVisible ? "show" : "hide"}`
+            : "scrolled static" 
         }`}
       >
         <div className="Nav-container">
@@ -109,32 +97,31 @@ export default function Navbar() {
             <Link
               to="/"
               className="logo"
-              onClick={() => setShowAccountPage(false)} // reset
             >
               Comfy
             </Link>
           </div>
-
+          <div className="Nav-list list">
+            <a href="/AddYourProperty">Add Your Property</a>
+            <a href="/Pg">PG</a>
+            <a href="/contact">Contact</a>
+          </div>
           <div className="Nav-list">
             <div className="list">
-              <a href="/AddYourProperty">Add Your Property</a>
-              <a href="/Pg">PG</a>
-              <a href="/contact">Contact</a>
-
               {isLogin && userRole === "admin" && (
-                <button className="Log-btn" onClick={handleAdminDashboard}>
+                <button className="Sign-btn" onClick={handleAdminDashboard} style={{color: 'white', border: 'none'}}>
                   Admin Dashboard
                 </button>
               )}
 
-              {/* LOGIN / PROFILE */}
               {!isLogin ? (
                 <>
-                  <Link to="/LogIn" className="Log-btn">
-                    Log In
+                  <Link to="/LogIn" className="Log-btn btn-arrow">
+                    Log In <ArrowRight size={14} className="arrow" />
                   </Link>
-                  <Link to="/SignIn" className="Sign-btn">
-                    Sign In
+
+                  <Link to="/SignIn" className="Sign-btn btn-arrow">
+                    Sign In <ArrowRight size={14} className="arrow" />
                   </Link>
                 </>
               ) : (
@@ -143,20 +130,21 @@ export default function Navbar() {
                     className="profile-icon"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
-                    👤 ▾
+                    <User size={18} style={{color: 'white'}} />
+                    <ChevronDown size={14} style={{color: 'white'}} />
                   </div>
 
                   {showDropdown && (
                     <div className="dropdown">
-                      {/* ✅ SAME PAGE ACCOUNT */}
+                      <Link to='/Account'>
                       <p
                         onClick={() => {
-                          setShowAccountPage(true);
                           setShowDropdown(false);
                         }}
                       >
                         Account
                       </p>
+                      </Link>
 
                       <p onClick={handleLogout} className="logout">
                         Logout
@@ -170,19 +158,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ✅ SAME PAGE ACCOUNT RENDER */}
-      {showAccountPage && (
-        <div className="account-wrapper">
-          <button
-            className="close-account"
-            onClick={() => setShowAccountPage(false)}
-          >
-            ❌ Close
-          </button>
-
-          <Account />
-        </div>
-      )}
     </div>
   );
 }
