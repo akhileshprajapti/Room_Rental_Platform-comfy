@@ -1,15 +1,51 @@
 const User = require('../Models/user.model');
 const Listing = require("../Models/listing.model");
+const Booking = require("../Models/booking.model");
+const { getPaymentSummary } = require("../Utils/paymentSummary");
 
 module.exports.getAdminDashboard = async (req, res) => {
     try {
         const user = await User.find();
         const listing = await Listing.find().populate("owner");
+        const bookings = await Booking.find()
+            .populate("user", "name email phone")
+            .populate("listing", "title location price")
+            .sort({ createdAt: -1 });
+        const normalizedBookings = bookings.map((booking) => {
+            const bookingObject = booking.toObject();
+            const summary = getPaymentSummary(booking);
+
+            return {
+                ...bookingObject,
+                totalPrice: summary.totalAmount,
+                amountPaid: summary.paidAmount,
+                remainingAmount: summary.dueAmount,
+                paymentStatus: summary.paymentStatus,
+                paymentBreakdown: {
+                    ...(bookingObject.paymentBreakdown || {}),
+                    tokenAmount: summary.tokenAmount,
+                    remainingAmount: summary.dueAmount,
+                },
+            };
+        });
+
+        const bookingStats = {
+            total: normalizedBookings.length,
+            pending: normalizedBookings.filter((booking) => booking.status === "Pending").length,
+            confirmed: normalizedBookings.filter((booking) => booking.status === "Confirmed").length,
+            cancelled: normalizedBookings.filter((booking) => booking.status === "Cancelled").length,
+            partialPayments: normalizedBookings.filter((booking) => booking.paymentStatus === "Partial").length,
+            paid: normalizedBookings.filter((booking) => booking.paymentStatus === "Paid").length,
+            totalDueAmount: normalizedBookings.reduce((sum, booking) => sum + (booking.remainingAmount || 0), 0),
+            totalPaidAmount: normalizedBookings.reduce((sum, booking) => sum + (booking.amountPaid || 0), 0),
+        };
 
         res.status(200).json({
             message: "Admin Dashboard",
             user: user || [],
-            listing: listing || []
+            listing: listing || [],
+            bookings: normalizedBookings || [],
+            bookingStats,
         });
 
     } catch (error) {

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./HeroSection.css";
 import BACKEND_API from "../../Config/api";
 import { MapPin, Home, Users } from "lucide-react";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [roomType, setRoomType] = useState("");
   const [gender, setGender] = useState("");
@@ -107,7 +109,15 @@ export default function HeroSection() {
             ) : (
               <div className="resultList">
                 {results.map((item) => (
-                  <div key={item._id} className="resultItem">
+                  <div 
+                    key={item._id} 
+                    className="resultItem"
+                    onClick={() => {
+                      navigate(`/pg/${item._id}`);
+                      setShowDialog(false);
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
                     <img src={item.image?.[0]?.url} alt="" />
                     <div>
                       <h4>{item.title}</h4>

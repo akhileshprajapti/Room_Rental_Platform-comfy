@@ -9,6 +9,7 @@ const ListingRouter = require("./Router/Listing.route")
 const BookingRouter = require("./Router/Booking.route");
 const ContactRouter = require("./Router/contact.route")
 const InvoiceRouter = require("./Router/Invoice.route")
+const paymentController = require("./Controller/payment.controller")
 const cors = require("cors")    
 
 app.use(cors({
@@ -17,6 +18,12 @@ app.use(cors({
 }))
 
 
+
+app.post(
+    "/api/v1/booking/webhook",
+    express.raw({ type: "application/json" }),
+    paymentController.handleStripeWebhook
+)
 
 app.use(express.json())
 app.use(cookieParser())

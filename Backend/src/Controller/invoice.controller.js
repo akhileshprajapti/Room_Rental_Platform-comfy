@@ -1,9 +1,36 @@
 const PDFDocument = require("pdfkit");
 const Booking = require("../Models/booking.model");
+const { getPaymentSummary } = require("../Utils/paymentSummary");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const {
+  sendBookingConfirmationEmail,
+  updateBookingFromCheckoutSession,
+} = require("./payment.controller");
 
 exports.generateInvoice = async (req, res) => {
   try {
     const { bookingId } = req.params;
+    const { session_id: sessionId } = req.query;
+
+    if (sessionId) {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.metadata?.bookingId === bookingId) {
+        const {
+          booking: confirmedBooking,
+          totalAmount,
+          paidAmount,
+          dueAmount,
+        } = await updateBookingFromCheckoutSession(session);
+
+        await sendBookingConfirmationEmail(
+          confirmedBooking,
+          totalAmount,
+          paidAmount,
+          dueAmount
+        );
+      }
+    }
 
     const booking = await Booking.findById(bookingId)
       .populate("user")
@@ -16,13 +43,16 @@ exports.generateInvoice = async (req, res) => {
     const listing = booking.listing;
 
     // 💰 Payment logic
-    let totalAmount = listing.price;
-    let paidAmount = booking.totalPrice;
-    let dueAmount = 0;
+    const summary = getPaymentSummary(booking);
 
-    if (booking.paymentMethod === "token") {
-      dueAmount = totalAmount - paidAmount;
+    if (summary.paidAmount <= 0 || booking.status !== "Confirmed") {
+      return res.status(409).json({ message: "Receipt is not ready yet" });
     }
+
+    const totalAmount = summary.totalAmount;
+    const paidAmount = summary.paidAmount;
+    const dueAmount = summary.dueAmount;
+    const tokenAmount = summary.tokenAmount;
 
     const doc = new PDFDocument({ margin: 50 });
 
@@ -121,19 +151,25 @@ exports.generateInvoice = async (req, res) => {
 
     // Total Price
     doc.text("Total Price", leftX, y);
-    doc.text(`₹${totalAmount}`, rightX, y);
+    doc.text(`${totalAmount}`, rightX, y);
 
     y += 20;
 
     // Paid Amount
     doc.text("Paid Amount", leftX, y);
-    doc.text(`₹${paidAmount}`, rightX, y);
+    doc.text(`${paidAmount}`, rightX, y);
 
     y += 20;
 
+    if (tokenAmount > 0) {
+      doc.text("Token Amount", leftX, y);
+      doc.text(`${tokenAmount}`, rightX, y);
+      y += 20;
+    }
+
     // Due Amount
     doc.text("Due Amount", leftX, y);
-    doc.text(`₹${dueAmount}`, rightX, y);
+    doc.text(`${dueAmount}`, rightX, y);
 
     y += 20;
     doc.moveTo(leftX, y).lineTo(550, y).stroke();
@@ -141,7 +177,7 @@ exports.generateInvoice = async (req, res) => {
     y += 20;
 
     // Status
-    if (booking.paymentMethod === "token") {
+    if (dueAmount > 0) {
       doc.fillColor("red").text("Status: Partially Paid", leftX, y);
     } else {
       doc.fillColor("green").text("Status: Fully Paid", leftX, y);

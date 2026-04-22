@@ -18,15 +18,15 @@ const bookingSchema = new mongoose.Schema({
     required: true,
   },
 
- visitDate:{
-  type: Date,
-  required: true,
- },
+  visitDate: {
+    type: Date,
+    required: true,
+  },
 
- paymentMethod: {
+  paymentMethod: {
     type: String,
-    enum: ["token", "pg", "visit", "full"],
-    // required: true,
+    enum: ["token", "full", "visit"],
+    default: "token",
   },
   sharingType: {
     type: String,
@@ -35,14 +35,47 @@ const bookingSchema = new mongoose.Schema({
     required: true,
   },
 
-  totalPrice: Number,
+  totalPrice: Number, // Full rent/price of listing
+  checkoutAmount: {
+    type: Number,
+    default: 0,
+  },
+  amountPaid: {
+    type: Number,
+    default: 0,
+  },
+  remainingAmount: {
+    type: Number,
+    default: 0,
+  },
+
+  paymentStatus: {
+    type: String,
+    enum: ["Pending", "Partial", "Paid"],
+    default: "Pending",
+  },
 
   status: {
     type: String,
     enum: ["Pending", "Confirmed", "Cancelled"],
-    default: "Confirmed",
+    default: "Pending",
   },
 
+  paymentId: String,
+  paymentDate: Date,
+  remainingPaymentId: String,
+  remainingPaymentDate: Date,
+  receiptEmailSent: {
+    type: Boolean,
+    default: false,
+  },
+  receiptEmailSentAt: Date,
+
+  paymentBreakdown: {
+    tokenAmount: { type: Number, default: 0 },
+    remainingAmount: { type: Number, default: 0 },
+    fullPayment: { type: Number, default: 0 },
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Booking", bookingSchema);

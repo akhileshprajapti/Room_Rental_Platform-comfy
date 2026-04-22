@@ -1,24 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import BACKEND_API from "../../Config/api";
 import "./payment.css";
 
 const PaymentSuccess = () => {
   const [params] = useSearchParams();
   const bookingId = params.get("id");
+  const sessionId = params.get("session_id");
 
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [ready, setReady] = useState(false);
+  const invoiceUrl = `${BACKEND_API}/api/v1/invoice/${bookingId}${sessionId ? `?session_id=${sessionId}` : ""}`;
 
   // 🔥 WAIT FOR WEBHOOK (AUTO CHECK)
   useEffect(() => {
     let attempts = 0;
+    let cancelled = false;
+
+    const confirmPayment = async () => {
+      if (!sessionId) return;
+
+      await fetch(
+        `${BACKEND_API}/api/v1/booking/confirm-payment/${sessionId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+    };
 
     const checkInvoice = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:8080/api/v1/invoice/${bookingId}`
-        );
+        await confirmPayment();
+
+        if (cancelled) return;
+
+        const res = await fetch(invoiceUrl);
 
         if (res.ok) {
           setReady(true);
@@ -29,7 +47,7 @@ const PaymentSuccess = () => {
 
       attempts++;
 
-      if (attempts < 5) {
+      if (attempts < 10) {
         setTimeout(checkInvoice, 2000); // retry every 2 sec
       } else {
         setLoading(false);
@@ -39,7 +57,11 @@ const PaymentSuccess = () => {
     if (bookingId) {
       checkInvoice();
     }
-  }, [bookingId]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [bookingId, sessionId]);
 
   // 🔥 DOWNLOAD FUNCTION
   const downloadInvoice = async () => {
@@ -51,9 +73,7 @@ const PaymentSuccess = () => {
     try {
       setDownloading(true);
 
-      const response = await fetch(
-        `http://localhost:8080/api/v1/invoice/${bookingId}`
-      );
+      const response = await fetch(invoiceUrl);
 
       if (!response.ok) {
         throw new Error("Invoice not ready");
@@ -80,15 +100,26 @@ const PaymentSuccess = () => {
     <div className="success-container">
       <div className="success-card">
 
-        <h1>✅ Payment Successful</h1>
-        <p>Your booking is confirmed!</p>
+        <div className="success-icon-large">✅</div>
+        
+        <h1>Payment Successful!</h1>
+        <p className="success-subtitle">Your booking has been confirmed</p>
 
         <p className="booking-id">
           Booking ID: <strong>{bookingId}</strong>
         </p>
 
+        <div className="success-info-box">
+          <p>✉️ A confirmation email with your receipt has been sent to your registered email address.</p>
+        </div>
+
         {/* 🔄 LOADING */}
-        {loading && <p>⏳ Preparing your invoice...</p>}
+        {loading && (
+          <div className="loading-box">
+            <p>⏳ Preparing your invoice PDF...</p>
+            <div className="spinner"></div>
+          </div>
+        )}
 
         {/* ✅ READY */}
         {ready && (
@@ -97,22 +128,55 @@ const PaymentSuccess = () => {
             onClick={downloadInvoice}
             disabled={downloading}
           >
-            {downloading ? "Downloading..." : "Download Invoice PDF"}
+            {downloading ? '⏳ Downloading...' : '📥 Download Receipt PDF'}
           </button>
         )}
 
         {/* ❌ NOT READY AFTER RETRY */}
         {!loading && !ready && (
-          <p style={{ color: "red" }}>
-            Invoice not ready yet. Please click again after few seconds.
-          </p>
+          <div className="retry-box">
+            <p>⚠️ Invoice is still being prepared. Please try downloading again in a few moments.</p>
+            <button 
+              className="download-btn"
+              onClick={() => {
+                setLoading(true);
+                // Retry checking
+                if (sessionId) {
+                  fetch(`${BACKEND_API}/api/v1/booking/confirm-payment/${sessionId}`, {
+                    credentials: "include",
+                  }).finally(() => {
+                    fetch(invoiceUrl)
+                      .then(r => {
+                        if (r.ok) {
+                          setReady(true);
+                        }
+                        setLoading(false);
+                      })
+                      .catch(() => setLoading(false));
+                  });
+                  return;
+                }
+
+                fetch(invoiceUrl)
+                  .then(r => {
+                    if (r.ok) {
+                      setReady(true);
+                    }
+                    setLoading(false);
+                  })
+                  .catch(() => setLoading(false));
+              }}
+            >
+              🔄 Retry
+            </button>
+          </div>
         )}
 
         <button
           className="home-btn"
-          onClick={() => (window.location.href = "/")}
+          onClick={() => (window.location.href = "/Account")}
         >
-          Go to Home
+          Go to My Bookings
         </button>
 
       </div>
