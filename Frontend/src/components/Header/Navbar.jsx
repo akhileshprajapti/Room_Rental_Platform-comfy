@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import Account from "../Accounts/Accounts";
+import Account from "../../page/Account/Account";
 import axios from "axios";
 import "./Navbar.css";
 import { User, ChevronDown, ArrowRight } from "lucide-react";
