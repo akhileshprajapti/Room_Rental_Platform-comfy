@@ -212,7 +212,7 @@
 }
 
 /* ==== EDIT MODAL (Glassmorphism) ==== */
-.edit-modal {
+.edit-modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 12000;
@@ -225,7 +225,7 @@
 }
 
 /* Modal Content */
-.edit-form-container {
+.edit-modal-content {
   width: 95%;
   max-width: 500px;
   background: rgba(255, 255, 255, 0.98);
@@ -233,6 +233,8 @@
   padding: 30px 28px;
   animation: slideUp 0.3s ease;
   box-shadow: 0 10px 45px rgba(0, 0, 0, 0.25);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* Modal Animations */
@@ -247,7 +249,7 @@
 }
 
 /* Modal Heading */
-.edit-form-container h2 {
+.edit-modal-content h2 {
   font-size: 1.7rem;
   text-align: center;
   font-weight: 700;
@@ -256,7 +258,7 @@
 }
 
 /* Labels */
-.edit-form-container label {
+.edit-modal-content label {
   font-size: 0.95rem;
   font-weight: 600;
   display: block;
@@ -264,10 +266,15 @@
   color: #333;
 }
 
+/* Form Group */
+.form-group {
+  margin-bottom: 15px;
+}
+
 /* Inputs, Textareas */
-.edit-form-container input,
-.edit-form-container textarea,
-.edit-form-container select {
+.edit-modal-content input,
+.edit-modal-content textarea,
+.edit-modal-content select {
   width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
@@ -278,9 +285,9 @@
 }
 
 /* On Focus */
-.edit-form-container input:focus,
-.edit-form-container textarea:focus,
-.edit-form-container select:focus {
+.edit-modal-content input:focus,
+.edit-modal-content textarea:focus,
+.edit-modal-content select:focus {
   border-color: #0072ff;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(0, 114, 255, 0.15);
@@ -293,8 +300,8 @@ textarea {
   border-radius: 12px;
 }
 
-/* Buttons */
-.edit-form-container .buttons {
+/* Modal Buttons */
+.modal-buttons {
   margin-top: 12px;
   display: flex;
   justify-content: space-between;
@@ -302,7 +309,7 @@ textarea {
 }
 
 /* Save Button */
-.edit-form-container button.save-btn {
+.modal-buttons .book-btn {
   flex: 1;
   background: linear-gradient(135deg, #0072ff, #00c6ff);
   border: none;
@@ -315,13 +322,13 @@ textarea {
   transition: 0.25s;
 }
 
-.edit-form-container button.save-btn:hover {
+.modal-buttons .book-btn:hover {
   background: linear-gradient(135deg, #005ed6, #00a7e6);
   transform: translateY(-2px);
 }
 
 /* Cancel Button */
-.edit-form-container button.cancel-btn {
+.modal-buttons .cancel-btn {
   flex: 1;
   background: #f3f4f6;
   border: 1px solid #d5d8dd;
@@ -332,7 +339,7 @@ textarea {
   transition: 0.25s;
 }
 
-.edit-form-container button.cancel-btn:hover {
+.modal-buttons .cancel-btn:hover {
   background: #e5e7eb;
   transform: translateY(-2px);
 }

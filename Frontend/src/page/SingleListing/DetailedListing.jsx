@@ -177,7 +177,103 @@ export default function ListingDetails() {
         />
       )}
 
-      {/* EDIT MODAL REMAINS THE SAME AS YOUR ORIGINAL CODE */}
+      {/* EDIT MODAL */}
+      {editMode && (
+        <div className="edit-modal-overlay" onClick={() => setEditMode(false)}>
+          <div className="edit-modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Edit Property</h2>
+            <form onSubmit={handleEditSubmit}>
+              <div className="form-group">
+                <label>Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={editData.title || ""}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  name="description"
+                  value={editData.description || ""}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Price (₹)</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={editData.price || ""}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Phone Number</label>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  value={editData.phoneNumber || ""}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Gender</label>
+                <select
+                  name="gender"
+                  value={editData.gender || ""}
+                  onChange={handleEditChange}
+                >
+                  <option value="Boys">Boys</option>
+                  <option value="Girls">Girls</option>
+                  <option value="Co-Living">Co-Living</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={editData.location || ""}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={editData.country || ""}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Room Type</label>
+                <select
+                  name="roomType"
+                  value={editData.roomType || ""}
+                  onChange={handleEditChange}
+                >
+                  <option value="Single Room">Single Room</option>
+                  <option value="Double Room">Double Room</option>
+                  <option value="Full House">Full House</option>
+                </select>
+              </div>
+              <div className="modal-buttons">
+                <button type="submit" className="book-btn">Save Changes</button>
+                <button type="button" className="book-btn book-btn" onClick={() => setEditMode(false)}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

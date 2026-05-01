@@ -13,18 +13,22 @@ export default function WhyChooseUs() {
     {
       title: "Sell Faster",
       desc: "Get your property sold quickly with our smart system.",
+      content: "Our platform connects you with genuine users actively searching for PG accommodations, reducing waiting time and increasing visibility. With features like real-time inquiries, easy listing management, and secure booking options, you can close deals faster and manage everything seamlessly in one place."
     },
     {
       title: "No Hidden Fees",
       desc: "Transparent pricing with zero surprises.",
+      content:"We provide a detailed breakdown of every fee upfront, so you can make informed decisions without confusion. There are no last-minute additions during the booking process, giving you complete peace of mind. Whether it’s listing your property or booking a PG, every transaction is straightforward and honest."
     },
     {
       title: "Direct Buyers",
       desc: "Connect directly with serious buyers.",
+      content:"Connect directly with serious buyers without any middlemen or delays. Our platform ensures that your property reaches genuine users who are actively looking for PG accommodations.You can communicate instantly, discuss details, and finalize deals faster with direct interaction. This not only saves time but also builds trust between owners and tenants."
     },
     {
       title: "Full Support",
       desc: "We guide you through the entire process.",
+      content:"We guide you through every step of the process, from listing your property to successfully closing the deal. Our platform is designed to make your experience smooth, simple, and hassle-free.Whether you need help creating your listing, managing inquiries, or understanding bookings, our support system is always ready to assist you."
     },
   ];
 
@@ -102,6 +106,7 @@ export default function WhyChooseUs() {
                 zIndex: i + 1,
               }}
             >
+              <h2 className="content">{item.content}</h2>
               <h3>{item.title}</h3>
               <p>{item.desc}</p>
             </div>
